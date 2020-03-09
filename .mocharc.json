@@ -7,7 +7,7 @@
   "reporter": "dot",
   "spec": "src/**/*.spec.ts",
   "file": [
-    "src/custom-matchers/assert-vector2.ts"
+    
   ],
   "package": "./package.json",
   "watch-files": ["src/**/*.ts"]
