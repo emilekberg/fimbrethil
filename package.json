@@ -1,0 +1,33 @@
+{
+  "name": "fimbrethil",
+  "version": "1.0.0",
+  "description": "entity component system javascript and typescript",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "test",
+    "build": "tsc && rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emilekberg/fimbrethil.git"
+  },
+  "keywords": [
+    "ecs",
+    "entity-component-system"
+  ],
+  "author": "Emil Ekberg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/emilekberg/fimbrethil/issues"
+  },
+  "homepage": "https://github.com/emilekberg/fimbrethil#readme",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^4.0.0",
+    "rollup": "^2.0.2",
+    "tslib": "^1.11.1",
+    "typescript": "^3.8.3"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "all": false,
+  "check-coverage": false,
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/custom-matchers/**/*.*",
+    "rollup.config.js"
+  ]
+}
