@@ -8,8 +8,8 @@
     "example": "examples"
   },
   "scripts": {
-    "test": "mocha",
-    "coverage": "nyc --reporter lcov --reporter text-summary mocha",
+    "test": "TS_NODE_PROJECT='./tsconfig.commonjs.json' mocha --reporter spec",
+    "coverage": "nyc --reporter lcov --reporter text-summary npm run test",
     "build": "rollup -c"
   },
   "repository": {

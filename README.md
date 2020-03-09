@@ -1,5 +1,7 @@
 # fimbrethil
 
+![Node.js CI](https://github.com/emilekberg/fimbrethil/workflows/Node.js%20CI/badge.svg)
+
 fimbrethil is a ECS for javascript and typescript.
 
 ## Components
