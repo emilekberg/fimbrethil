@@ -1,4 +1,4 @@
-import { Hash } from '../entity-id';
+import { Hash } from '../hash';
 
 export interface IArchetypeValue<T> {
   hash: Hash;

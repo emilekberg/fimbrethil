@@ -13,6 +13,7 @@ const cjs = {
       typescript: require('typescript'),
       outDir: './dist',
       declarationDir: './dist/types',
+      module: 'es2015',
       include: [
         './src/**/*.ts',
       ],

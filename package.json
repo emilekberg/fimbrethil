@@ -8,7 +8,7 @@
     "example": "examples"
   },
   "scripts": {
-    "test": "TS_NODE_PROJECT='./tsconfig.commonjs.json' mocha --reporter spec",
+    "test": "mocha --reporter spec",
     "coverage": "nyc --reporter lcov --reporter text-summary npm run test",
     "build": "rollup -c"
   },

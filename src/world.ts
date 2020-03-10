@@ -5,7 +5,7 @@ import Archetype from './archetype';
 import { IWorld, RetStuff } from './interfaces/world';
 import { IArchetypeValue } from './interfaces/archetype-value';
 import { EntityId } from './entity-id';
-import { createComponent } from './components/component';
+import { createComponent } from './component-utils';
 
 export default class World implements IWorld {
   private entities: Set<EntityId>;

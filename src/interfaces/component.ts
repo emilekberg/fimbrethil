@@ -1,4 +1,5 @@
-import { Hash, EntityId } from '../entity-id';
+import { EntityId } from '../entity-id';
+import { Hash } from '../hash';
 
 export interface IComponent {
   entityId: number;

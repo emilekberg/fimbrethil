@@ -1,6 +1,7 @@
 import { IComponent, ComponentConstructor } from './interfaces/component';
 import { IArchetypeValue } from './interfaces/archetype-value';
-import { Hash, EntityId } from './entity-id';
+import { EntityId } from './entity-id';
+import { Hash } from './hash';
 
 /**
  * Returns a subset of components per entity.
