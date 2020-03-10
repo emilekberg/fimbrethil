@@ -2,15 +2,19 @@
   "name": "fimbrethil",
   "version": "1.0.0",
   "description": "entity component system javascript and typescript",
-  "main": "./dist/index.js",
-  "types": "./dist/types/index.d.ts",
+  "main": "./bin/index.js",
+  "module": "./bin/index.js",
+  "types": "./types/index.d.ts",
+  "browser": "./dist/index.js",
   "directories": {
     "example": "examples"
   },
   "scripts": {
     "test": "mocha --reporter spec",
     "coverage": "nyc --reporter lcov --reporter text-summary npm run test",
-    "build": "rollup -c"
+    "build": "tsc -p ./tsconfig.esm.json",
+    "bundle": "rollup -c"
+    
   },
   "repository": {
     "type": "git",
