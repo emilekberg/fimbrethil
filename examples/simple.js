@@ -1,4 +1,4 @@
-const {World, Component, Archetype, registerComponent} = require('../');
+const {World, Component, Archetype, registerComponent} = require('../types');
 
 class Health extends Component {
   value = 100;

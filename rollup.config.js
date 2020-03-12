@@ -4,15 +4,13 @@ const cjs = {
   input: 'src/index.ts',
   output: {
     entryFileNames: '[name].js',
-    dir: 'dist',
+    dir: 'dist/cjs',
     format: 'cjs',
     sourcemap: true
   },
   plugins: [
     typescript({
       typescript: require('typescript'),
-      outDir: './dist',
-      declarationDir: './dist/types',
       module: 'es2015',
       include: [
         './src/**/*.ts',
@@ -23,15 +21,31 @@ const cjs = {
     })
   ]
 };
-const es = {
+const esm = {
   ...cjs,
   output: {
     ...cjs.output,
     dir: 'dist/es',
     format: 'es',
     sourcemap: true
-  }
+  },
+  plugins: [
+    ...cjs.plugins
+  ]
+}
+const iife = {
+  ...cjs,
+  output: {
+    ...cjs.output,
+    dir: 'dist/iife',
+    format: 'iife',
+    sourcemap: true,
+    name: 'fimbrethil'
+  },
+  plugins: [
+    ...cjs.plugins
+  ]
 }
 export default [
-  cjs
+  cjs, esm, iife
 ]

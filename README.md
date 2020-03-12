@@ -2,7 +2,8 @@
 
 ![Node.js CI](https://github.com/emilekberg/fimbrethil/workflows/Node.js%20CI/badge.svg)
 
-fimbrethil is a ECS for javascript and typescript.
+fimbrethil is a ECS (Entity-Component-System) for javascript written in Typescript with no dependencies.
+
 
 ## Components
 
@@ -84,6 +85,22 @@ const id = world.createEntity()
   .build();
 ```
 
+entities can also hold child entities child can for instance, inherit position and similar.
+
+```typescript
+const id = world.createEntity()
+  .with(Transform)
+  .withChild(child => child
+    .with(Transform)
+    .with(Sound, {file: "boom.wav"})
+    .build()
+  ).build();
+```
+
 ## Examples
 
 For further examples, see the example directory.
+
+`examples/simple.js` - full example with minimum amount of logic.
+
+`examples/canvas.html` - canvas renderer, spawner system and killer system. Also gravity and mover system that affects position.
