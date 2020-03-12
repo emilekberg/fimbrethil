@@ -7,6 +7,9 @@
 </body>
 <script src="../dist/iife/index.js"></script>
 <script>
+  /***************************************************
+   * Define components 
+   * *************************************************/
   class Transform extends fimbrethil.Component {
     x = 0;
     y = 0;
@@ -33,6 +36,10 @@
   fimbrethil.registerComponent(Timer);
   fimbrethil.registerComponent(Spawner);
   fimbrethil.registerComponent(Physics);
+
+  /***************************************************
+   * Define systems
+   * *************************************************/
 
   function render(world, { canvas }) {
     const components = fimbrethil.Archetype.create(Rectangle, Transform);
@@ -89,6 +96,10 @@
     }
   }
 
+  /***************************************************
+   * Helper function to create entity
+   * *************************************************/
+
   function createEntityRect(world, x, y) {
     return world.createEntity()
       .with(Transform, {
@@ -108,8 +119,10 @@
 
   const canvasElement = document.getElementById('canvas');
 
+  /***************************************************
+   * World setup
+   * *************************************************/
   const world = new fimbrethil.World();
-
   world
     .add(spawner, {
       interval: 0.8
@@ -117,7 +130,7 @@
     .add(lifetime)
     .add(mover)
     .add(gravity)
-    .add(render, {
+    .addRenderer(render, {
       canvas: canvasElement
     });
 
@@ -130,7 +143,9 @@
     .with(Spawner)
     .build();
 
-
+  /***************************************************
+   * Simple update loop
+   * *************************************************/
   let now = performance.now();
   let then = performance.now();
   (function ticker() {
