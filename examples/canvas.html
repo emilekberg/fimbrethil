@@ -68,7 +68,24 @@
     const components = fimbrethil.Archetype.create(Physics, Velocity);
     return (dt) => {
       world.query((physics, velocity) => {
-        velocity.y += velocity.y * 1.5 * dt;
+        velocity.y += 400 * dt;
+      }, components);
+    }
+  }
+  function physics(world, {canvas}) {
+    const {height, width} = canvas;
+    const components = fimbrethil.Archetype.create(Transform, Velocity, Rectangle, Physics);
+    return (dt) => {
+      world.query((transform, velocity, rect, _) => {
+        if (transform.y + rect.height > height) {
+          velocity.y *= -1;
+          transform.y = height - rect.height;
+          velocity.x *= 0.9;
+          velocity.y *= 0.70;
+        }
+        if (transform.x + rect.width > width || transform.x < 0) {
+          velocity.x *= -1;
+        }
       }, components);
     }
   }
@@ -106,12 +123,12 @@
         x,y
       })
       .with(Velocity, {
-        x: 0,
-        y: 10,
+        x: (Math.random()*2-1) * 100,
+        y: (Math.random()*2-1) * 100,
       })
       .with(Rectangle)
       .with(Timer, {
-        value: 2
+        value: 10
       })
       .with(Physics)
       .build();
@@ -125,20 +142,22 @@
   const world = new fimbrethil.World();
   world
     .add(spawner, {
-      interval: 0.8
+      interval: 0.5
     })
     .add(lifetime)
     .add(mover)
     .add(gravity)
+    .add(physics, {
+      canvas: canvasElement
+    })
     .addRenderer(render, {
       canvas: canvasElement
     });
 
   world.createEntity()
-    .with(Transform)
-    .with(Velocity, {
-      x: 3,
-      y: 0
+    .with(Transform, {
+      x: canvasElement.width * 0.5,
+      y: canvasElement.height * 0.25,
     })
     .with(Spawner)
     .build();
