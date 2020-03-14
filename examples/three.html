@@ -17,43 +17,59 @@
 <script src="./three/systems.js"></script>
 <script>
   const world = new fimbrethil.World();
+  world.onAddComponent(Mesh, (comp) => {
+    world.query((scene) => {
+      scene.value.add(comp.mesh);
+    }, fimbrethil.Archetype.create(Scene));
+  });
   world
     .add(mover)
+    .add(transformUpdateSystem)
     .addRenderer(render);
 
   world.createEntity()
+    .with(Scene)
+    .build();
+;
+  world.createEntity()
     .with(Transform, {
-      position: {
-        x: 0,
-        y: 0,
-        z: 5
-      }
+      position: new THREE.Vector3(0,0,5),
     })
     .with(Camera)
     .build();
 
+    const geometry = new THREE.BoxGeometry();
+    const material = new THREE.MeshPhongMaterial({
+      // light
+      specular: 0xD76531,
+      // intermediate
+      color: 0xef8834,
+      // dark
+      emissive: 0x8c2317,
+      shininess: 50,
+      wireframe: false,
+    });
+
   world.createEntity()
     .with(Transform)
     .with(Velocity, {
-      rotation: {
-        x: 1,
-        y: 1,
-        z: 0
-      }
+      rotation: new THREE.Vector3(1,1,0),
     })
-    .with(Mesh)
+    .with(Mesh, {
+      mesh: new THREE.Mesh(geometry, material)
+    })
     .build();
     
   world.createEntity()
     .with(Transform, {
-      position: {
-        x: 2,
-        y: 2,
-        z: 1
-      }
+      position: new THREE.Vector3(2,2,1),
     })
-    .with(Light)
+    .with(Mesh, {
+      mesh: new THREE.DirectionalLight(0xFFFFFF, 2)
+    })
     .build();
+
+
   /***************************************************
    * Simple update loop
    * *************************************************/

@@ -2,6 +2,7 @@ function mover(world) {
   const components = fimbrethil.Archetype.create(Transform, Velocity);
   return (dt) => {
     world.query((transform, velocity) => {
+
       transform.position.x += velocity.position.x * dt;
       transform.position.y += velocity.position.y * dt;
       transform.position.z += velocity.position.z * dt;
@@ -12,10 +13,17 @@ function mover(world) {
     }, components);
   }
 }
-function render(world) {
+function transformUpdateSystem(world) {
   const components = fimbrethil.Archetype.create(Transform, Mesh);
-  const lights = fimbrethil.Archetype.create(Transform, Light);
-  const scene = new THREE.Scene();
+  return () => {
+    world.query((transform, mesh) => {
+      mesh.mesh.position.copy(transform.position);
+      mesh.mesh.rotation.set(transform.rotation.x, transform.rotation.y, transform.rotation.z);
+    }, components);
+  }
+}
+function render(world) {
+  const componentsScene = fimbrethil.Archetype.create(Scene);
   const renderer = new THREE.WebGLRenderer();
   const width = window.innerWidth;
   const height = window.innerHeight;
@@ -25,25 +33,19 @@ function render(world) {
   return (dt) => {
     // find the camera.
     let cameraInstance;
+    let sceneInstance;
+    world.query((scene) => {
+      sceneInstance = scene.value;
+    }, componentsScene);
     world.query((camera, transform) => {
       if (camera.active) {
-        Object.assign(camera.perspective.position, transform.position);
-
+        camera.perspective.position.copy(transform.position);
         cameraInstance = camera;
       }
     }, cameraComponents);
     if (!cameraInstance) {
       return;
     }
-    world.query((transform, { mesh }) => {
-      Object.assign(mesh.position, transform.position);
-      Object.assign(mesh.rotation, transform.rotation);
-      scene.add(mesh);
-    }, components);
-    world.query((transform, light) => {
-      Object.assign(light.instance.position, transform.position);
-      scene.add(light.instance);
-    }, lights)
-    renderer.render(scene, cameraInstance.perspective);
+    renderer.render(sceneInstance, cameraInstance.perspective);
   }
 }

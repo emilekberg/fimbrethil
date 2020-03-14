@@ -6,6 +6,7 @@ import { IWorld, RetStuff } from './interfaces/world';
 import { IArchetypeValue } from './interfaces/archetype-value';
 import { EntityId } from './entity-id';
 import { createComponent } from './component-utils';
+import { Hash } from './hash';
 
 export default class World implements IWorld {
   private entities: Set<EntityId>;
@@ -20,6 +21,10 @@ export default class World implements IWorld {
 
   private archetypes: Archetype[];
 
+  private onAddCallbacks: Record<Hash, Array<(component: IComponent) => void>>;
+  
+  private onRemoveCallbacks: Record<Hash, Array<(component: IComponent) => void>>;
+
   constructor() {
     this.entities = new Set();
     this.entityArchetype = {};
@@ -27,6 +32,22 @@ export default class World implements IWorld {
     this.systems = [];
     this.renderSystems = [];
     this.archetypes = [];
+    this.onAddCallbacks = {};
+    this.onRemoveCallbacks = {};
+  }
+
+  onAddComponent<T extends IComponent>(type: ComponentConstructor<T>, callback: (component: T) => void) {
+    if(this.onAddCallbacks[type.hash] === undefined) {
+      this.onAddCallbacks[type.hash] = [];
+    }
+    this.onAddCallbacks[type.hash].push(callback as any);
+  }
+
+  onRemoveComponent<T extends IComponent>(type: ComponentConstructor<T>, callback: (component: T) => void) {
+    if(this.onRemoveCallbacks[type.hash] === undefined) {
+      this.onRemoveCallbacks[type.hash] = [];
+    }
+    this.onRemoveCallbacks[type.hash].push(callback as any);
   }
 
   add(systemFactory: SystemFactory<SystemTicker, unknown>, options?: unknown): IWorld {
@@ -97,6 +118,12 @@ export default class World implements IWorld {
     Object.assign(instance, opts);
     if (parseArchetypes) {
       this.updateArchetype(id, instance);
+    }
+    const hash = (instance.constructor as ComponentConstructor<IComponent>).hash;
+    if(this.onAddCallbacks[hash]) {
+      this.onAddCallbacks[hash].forEach((cb) => {
+        cb(instance);
+      });
     }
     return instance;
   }

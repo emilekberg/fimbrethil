@@ -1,44 +1,17 @@
 class Transform extends fimbrethil.Component {
-  position = {
-    x: 0,
-    y: 0,
-    z: 0
-  };
-  rotation = {
-    x: 0,
-    y: 0,
-    z: 0,
-  };
+  position = new THREE.Vector3();
+  rotation = new THREE.Vector3();
 }
 fimbrethil.registerComponent(Transform);
 
 class Velocity extends fimbrethil.Component {
-  position = {
-    x: 0,
-    y: 0,
-    z: 0,
-  }
-  rotation = {
-    x: 0,
-    y: 0,
-    z: 0,
-  }
+  position = new THREE.Vector3();
+  rotation = new THREE.Vector3();
 }
 fimbrethil.registerComponent(Velocity);
 
 class Mesh extends fimbrethil.Component {
-  geometry = new THREE.BoxGeometry();
-  material = new THREE.MeshPhongMaterial({
-    // light
-    specular: 0xD76531,
-    // intermediate
-    color: 0xef8834,
-    // dark
-    emissive: 0x8c2317,
-    shininess: 50,
-    wireframe: false,
-  });
-  mesh = new THREE.Mesh(this.geometry, this.material);
+  mesh = new THREE.Object3D();
 }
 fimbrethil.registerComponent(Mesh);
 
@@ -65,3 +38,8 @@ class Camera extends fimbrethil.Component {
 
 }
 fimbrethil.registerComponent(Camera);
+
+class Scene extends fimbrethil.Component {
+  value = new THREE.Scene();
+}
+fimbrethil.registerComponent(Scene);
