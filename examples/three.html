@@ -1,0 +1,74 @@
+<html>
+
+<head>
+  <style type="text/css">
+    body {
+      padding: 0px;
+      margin: 0px;
+    }
+  </style>
+</head>
+
+<body>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.js"></script>
+<script src="../dist/iife/index.js"></script>
+<script src="./three/components.js"></script>
+<script src="./three/systems.js"></script>
+<script>
+  const world = new fimbrethil.World();
+  world
+    .add(mover)
+    .addRenderer(render);
+
+  world.createEntity()
+    .with(Transform, {
+      position: {
+        x: 0,
+        y: 0,
+        z: 5
+      }
+    })
+    .with(Camera)
+    .build();
+
+  world.createEntity()
+    .with(Transform)
+    .with(Velocity, {
+      rotation: {
+        x: 1,
+        y: 1,
+        z: 0
+      }
+    })
+    .with(Mesh)
+    .build();
+    
+  world.createEntity()
+    .with(Transform, {
+      position: {
+        x: 2,
+        y: 2,
+        z: 1
+      }
+    })
+    .with(Light)
+    .build();
+  /***************************************************
+   * Simple update loop
+   * *************************************************/
+  let now = performance.now();
+  let then = performance.now();
+  (function ticker() {
+    now = performance.now();
+    let delta = (now - then) / 1000;
+    then = now;
+    world.tick(delta);
+    world.render(delta);
+    requestAnimationFrame(ticker);
+  })();
+
+
+</script>
+
+</html>
