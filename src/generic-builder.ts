@@ -27,7 +27,7 @@ function GenericBuilder<T>(
     },
     withChild: (
       name: string,
-      callback: (child: GenericBuilderChain<T>, parentId: number) => number,
+      callback: (child: GenericBuilderChain<T>, parentId: number) => GenericBuilderChain<T>,
     ) => {
       const childBuilder = GenericBuilder(getId, build);
       childCounter += 1;

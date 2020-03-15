@@ -10,6 +10,10 @@ export declare type RetStuff<C> = {
 };
 
 export interface IWorld {
+
+  onComponentAdded<T extends IComponent>(type: ComponentConstructor<T>, callback: (component: T) => void): void;
+  onComponentRemoved<T extends IComponent>(type: ComponentConstructor<T>, callback: (component: T) => void): void;
+
   createEntity(): GenericBuilderChain<ComponentConstructor<IComponent>>;
   removeEntity(id: EntityId): void;
   hasEntity(id: EntityId): boolean;
@@ -23,6 +27,10 @@ export interface IWorld {
 
   tick(timestep: number): void;
   render(deltatime: number, interpolation?: number): void;
+
+  hasEntity(id: EntityId): boolean;
+  hasComponent<T extends IComponent>(id: EntityId, ctor: ComponentConstructor<T>): boolean;
+  getComponent<T extends IComponent>(id: EntityId, ctor: ComponentConstructor<T>): T|undefined;
   addComponent<T extends IComponent>(
     id: EntityId,
     component: ComponentConstructor<T>,

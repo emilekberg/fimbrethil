@@ -13,7 +13,7 @@ export declare type GenericBuilderChain<T> = {
     cb: (
       child: GenericBuilderChain<T>,
       parentId: number,
-    ) => number
+    ) => GenericBuilderChain<T>
   ) => GenericBuilderChain<T>,
 
   build: () => number,
