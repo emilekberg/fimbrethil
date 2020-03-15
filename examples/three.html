@@ -17,11 +17,23 @@
 <script src="./three/systems.js"></script>
 <script>
   const world = new fimbrethil.World();
-  world.onAddComponent(Mesh, (comp) => {
+  world.onComponentAdded(Mesh, (comp) => {
+    const parent = world.getComponent(comp.entityId, fimbrethil.Parent);
+    if(parent) {
+      const mesh = world.getComponent(parent.entityId, Mesh);
+      if(mesh) {
+        mesh.mesh.add(comp.mesh);
+        return;
+      }
+    }
     world.query((scene) => {
       scene.value.add(comp.mesh);
     }, fimbrethil.Archetype.create(Scene));
   });
+  world.onComponentRemoved(Mesh, (comp) => {
+    comp.mesh.parent.remove(comp.mesh)
+  });
+
   world
     .add(mover)
     .add(transformUpdateSystem)
@@ -58,6 +70,16 @@
     .with(Mesh, {
       mesh: new THREE.Mesh(geometry, material)
     })
+    .withChild('cube', child => child
+      .with(Transform, {
+        position: new THREE.Vector3(0.5,0.5,0)
+      })
+      .with(Velocity, {
+        rotation: new THREE.Vector3(1,1,1)
+      })
+      .with(Mesh, {
+        mesh: new THREE.Mesh(geometry, material)
+      }))
     .build();
     
   world.createEntity()

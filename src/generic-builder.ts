@@ -10,6 +10,7 @@ function GenericBuilder<T>(
   const members: Array<T|string> = [];
   const opts: Partial<T|undefined>[] = [];
   const children: Record<string, number> = {};
+  const childBuilders: Array<GenericBuilderChain<IComponent>> = [];
   let childCounter = 0;
   const ret: GenericBuilderChain<T> = {
     fromJson: (data: Record<string, {}>) => {
@@ -33,17 +34,19 @@ function GenericBuilder<T>(
       childBuilder.with(Parent, {
         entityId: id,
       });
-      const childId = callback(childBuilder, id);
-      children[name] = childId;
+      callback(childBuilder, id);
+      children[name] = id+1;
+      childBuilders.push(childBuilder);
       return ret;
     },
     build: () => {
       if (childCounter > 0) {
         ret.with(Children, {
-          children,
+          children: children,
         });
       }
       build(id, members, opts);
+      childBuilders.forEach((b) => b.build());
       return id;
     },
   };

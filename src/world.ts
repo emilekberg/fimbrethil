@@ -22,7 +22,7 @@ export default class World implements IWorld {
   private archetypes: Archetype[];
 
   private onAddCallbacks: Record<Hash, Array<(component: IComponent) => void>>;
-  
+
   private onRemoveCallbacks: Record<Hash, Array<(component: IComponent) => void>>;
 
   constructor() {
@@ -36,15 +36,15 @@ export default class World implements IWorld {
     this.onRemoveCallbacks = {};
   }
 
-  onAddComponent<T extends IComponent>(type: ComponentConstructor<T>, callback: (component: T) => void) {
-    if(this.onAddCallbacks[type.hash] === undefined) {
+  onComponentAdded<T extends IComponent>(type: ComponentConstructor<T>, callback: (component: T) => void) {
+    if (this.onAddCallbacks[type.hash] === undefined) {
       this.onAddCallbacks[type.hash] = [];
     }
     this.onAddCallbacks[type.hash].push(callback as any);
   }
 
-  onRemoveComponent<T extends IComponent>(type: ComponentConstructor<T>, callback: (component: T) => void) {
-    if(this.onRemoveCallbacks[type.hash] === undefined) {
+  onComponentRemoved<T extends IComponent>(type: ComponentConstructor<T>, callback: (component: T) => void) {
+    if (this.onRemoveCallbacks[type.hash] === undefined) {
       this.onRemoveCallbacks[type.hash] = [];
     }
     this.onRemoveCallbacks[type.hash].push(callback as any);
@@ -74,6 +74,22 @@ export default class World implements IWorld {
     return this.entities.has(id);
   }
 
+  hasComponent<T extends IComponent>(id: EntityId, ctor: ComponentConstructor<T>): boolean {
+    const index = this.entityArchetype[id];
+    if (index === undefined) {
+      return false;
+    }
+    return this.archetypes[index].hasHash(ctor.hash);
+  }
+
+  getComponent<T extends IComponent>(id: EntityId, ctor: ComponentConstructor<T>): T|undefined {
+    const index = this.entityArchetype[id];
+    if (index === undefined) {
+      return undefined;
+    }
+    return this.archetypes[index].getHash<T>(id, ctor.hash);
+  }
+
   /**
    * Creates a new entity and returns a builder for it.
    * Once done, parses the component from the builder and adds to the correct archetype.
@@ -93,7 +109,11 @@ export default class World implements IWorld {
         constructors.push(constructor);
         instances[constructor.hash] = instance;
       });
+
       this.addEntityToArchetype(id, constructors, instances);
+      Object.keys(instances).forEach((key) => {
+        this.callOnAdd(instances[key]);
+      });
     });
   }
 
@@ -103,6 +123,15 @@ export default class World implements IWorld {
       archetype.remove(id);
     });
     delete this.entityArchetype[id];
+  }
+
+  private callOnAdd(instance: IComponent) {
+    const hash = (instance.constructor as ComponentConstructor<IComponent>).hash;
+    if (this.onAddCallbacks[hash]) {
+      this.onAddCallbacks[hash].forEach((cb) => {
+        cb(instance);
+      });
+    }
   }
 
   addComponent<T extends IComponent>(
@@ -118,13 +147,9 @@ export default class World implements IWorld {
     Object.assign(instance, opts);
     if (parseArchetypes) {
       this.updateArchetype(id, instance);
+      this.callOnAdd(instance);
     }
-    const hash = (instance.constructor as ComponentConstructor<IComponent>).hash;
-    if(this.onAddCallbacks[hash]) {
-      this.onAddCallbacks[hash].forEach((cb) => {
-        cb(instance);
-      });
-    }
+
     return instance;
   }
 

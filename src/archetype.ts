@@ -53,6 +53,10 @@ export default class Archetype {
     return components;
   }
 
+  getHash<T extends IComponent>(id: EntityId, hash: Hash): T|undefined {
+    return this.components[id][hash] as T;
+  }
+
   is(hash: Hash) {
     return this.hash === hash;
   }
@@ -67,8 +71,11 @@ export default class Archetype {
    */
   has(value: IArchetypeValue<ComponentConstructor<IComponent>[]>): boolean {
     // eslint-disable-next-line no-bitwise
-    const result = (value.hash & this.hash) === value.hash;
-    return result;
+    return this.hasHash(value.hash);
+  }
+
+  hasHash(hash: Hash): boolean {
+    return (hash & this.hash) === hash;
   }
 
   add(id: EntityId, components: Record<Hash, IComponent>) {
