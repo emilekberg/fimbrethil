@@ -35,7 +35,7 @@ function GenericBuilder<T>(
         entityId: id,
       });
       callback(childBuilder, id);
-      children[name] = id+1;
+      children[name] = id+childCounter;
       childBuilders.push(childBuilder);
       return ret;
     },
