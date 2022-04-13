@@ -11,7 +11,7 @@ const cjs = {
   plugins: [
     typescript({
       typescript: require('typescript'),
-      module: 'es2015',
+      module: 'es2020',
       include: [
         './src/**/*.ts',
       ],

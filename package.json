@@ -2,10 +2,11 @@
   "name": "fimbrethil",
   "version": "1.0.5",
   "description": "entity component system javascript and typescript",
-  "main": "./bin/index.js",
-  "module": "./bin/index.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/module/index.js",
+  "bundle": "./dist/iife/index.js",
   "types": "./types/index.d.ts",
-  "browser": "./dist/cjs/index.js",
+  "browser": "./dist/iife/index.js",
   "directories": {
     "example": "examples"
   },
