@@ -1,6 +1,6 @@
-import { GenericBuilderChain } from './interfaces/generic-builder';
-import { IComponent, ComponentConstructor } from './interfaces/component';
-import { Parent, Children } from './components/index';
+import type { GenericBuilderChain } from './interfaces/generic-builder.js';
+import type { IComponent, ComponentConstructor } from './interfaces/component.js';
+import { Parent, Children } from './components/index.js';
 
 function GenericBuilder<T>(
   getId: () => number,

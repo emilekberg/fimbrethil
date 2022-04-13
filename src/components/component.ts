@@ -1,6 +1,6 @@
-import { IComponent } from '../interfaces/component';
-import { EntityId } from '../entity-id';
-import { Hash } from "../hash";
+import type { IComponent } from '../interfaces/component.js';
+import { EntityId } from '../entity-id.js';
+import { Hash } from "../hash.js";
 
 export default class Component implements IComponent {
   public static hash: Hash = -1;

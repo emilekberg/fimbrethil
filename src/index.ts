@@ -1,13 +1,13 @@
-import Archetype from './archetype';
-import Component from './components/component';
-import GenericBuilder from './generic-builder';
-import World from './world';
+import Archetype from './archetype.js';
+import Component from './components/component.js';
+import GenericBuilder from './generic-builder.js';
+import World from './world.js';
 
-export * from './entity-id';
-export * from './hash';
-export * from './interfaces/index';
-export * from './components/index';
-export * from './component-utils';
+export * from './entity-id.js';
+export * from './hash.js';
+export * from './interfaces/index.js';
+export * from './components/index.js';
+export * from './component-utils.js';
 
 export {
   Archetype,

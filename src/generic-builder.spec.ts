@@ -1,10 +1,9 @@
 
-import GenericBuilder from './generic-builder';
-import { IComponent, ComponentConstructor } from './interfaces/component';
-import Component from './components/component';
-import { registerComponent } from './component-utils';
+import GenericBuilder from './generic-builder.js';
+import type { IComponent, ComponentConstructor } from './interfaces/component.js';
+import Component from './components/component.js';
 import { expect } from 'chai';
-import { Children, Parent } from './components';
+import { Children, Parent } from './components/index.js';
 
 describe('generic-builder', function () {
   class AAA extends Component { };

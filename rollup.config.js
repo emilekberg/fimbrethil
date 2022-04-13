@@ -11,13 +11,6 @@ const cjs = {
   plugins: [
     typescript({
       typescript: require('typescript'),
-      module: 'es2020',
-      include: [
-        './src/**/*.ts',
-      ],
-      exclude: [
-        './src/**/*.spec.ts',
-      ]
     })
   ]
 };
@@ -30,7 +23,9 @@ const esm = {
     sourcemap: true
   },
   plugins: [
-    ...cjs.plugins
+    typescript({
+      typescript: require('typescript'),
+    })
   ]
 }
 const iife = {
@@ -43,7 +38,9 @@ const iife = {
     name: 'fimbrethil'
   },
   plugins: [
-    ...cjs.plugins
+    typescript({
+      typescript: require('typescript'),
+    })
   ]
 }
 export default [

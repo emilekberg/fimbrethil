@@ -10,5 +10,9 @@
     "src/index.ts"
   ],
   "package": "./package.json",
-  "watch-files": ["src/**/*.ts"]
+  "watch-files": ["src/**/*.ts"],
+  "node-option": [
+		"experimental-specifier-resolution=node",
+		"loader=ts-node/esm"
+	]
 }

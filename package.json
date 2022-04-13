@@ -2,6 +2,7 @@
   "name": "fimbrethil",
   "version": "1.0.5",
   "description": "entity component system javascript and typescript",
+  "type": "module",
   "main": "./dist/cjs/index.js",
   "module": "./dist/module/index.js",
   "bundle": "./dist/iife/index.js",

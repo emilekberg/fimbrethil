@@ -1,6 +1,6 @@
-import Children from './children';
-import Parent from './parent';
-import Info from './info';
+import Children from './children.js';
+import Parent from './parent.js';
+import Info from './info.js';
 
 export {
   Children,

@@ -1,12 +1,12 @@
-import { IComponent, ComponentConstructor } from './interfaces/component';
-import { SystemFactory, SystemTicker, SystemRender } from './interfaces/system';
-import GenericBuilder from './generic-builder';
-import Archetype from './archetype';
-import { IWorld, RetStuff } from './interfaces/world';
-import { IArchetypeValue } from './interfaces/archetype-value';
-import { EntityId } from './entity-id';
-import { createComponent } from './component-utils';
-import { Hash } from './hash';
+import type { IComponent, ComponentConstructor } from './interfaces/component.js';
+import { SystemFactory, SystemTicker, SystemRender } from './interfaces/system.js';
+import GenericBuilder from './generic-builder.js';
+import Archetype from './archetype.js';
+import { IWorld, RetStuff } from './interfaces/world.js';
+import { IArchetypeValue } from './interfaces/archetype-value.js';
+import { EntityId } from './entity-id.js';
+import { createComponent } from './component-utils.js';
+import { Hash } from './hash.js';
 
 export default class World implements IWorld {
   private entities: Set<EntityId>;

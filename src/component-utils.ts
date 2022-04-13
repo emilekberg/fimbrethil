@@ -1,5 +1,5 @@
-import { EntityId } from "./entity-id";
-import { IComponent, ComponentConstructor } from "./interfaces/component";
+import { EntityId } from "./entity-id.js";
+import type { IComponent, ComponentConstructor } from "./interfaces/component";
 
 let componentFactory: Map<string, (id: EntityId) => IComponent> = new Map();
 let bit: number = 1;
