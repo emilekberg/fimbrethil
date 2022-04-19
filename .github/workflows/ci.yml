@@ -29,3 +29,16 @@ jobs:
     - run: npm test
       env:
         CI: true
+
+
+    # Creates dist folder
+    - run: mkdir www
+    - run: cp -R ./dist/ ./www/
+    - run: cp -R ./examples/ ./www/
+    
+    # Deploy to github pages
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4.2.5
+      with:
+        branch: gh-pages
+        folder: www
