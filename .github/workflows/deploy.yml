@@ -10,19 +10,19 @@ on:
 jobs:
   deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    runs-on: ubuntu-latest
+      runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v2
+      steps:
+      - uses: actions/checkout@v2
 
-      # Creates dist folder
-      - run: mkdir www
-      - run: cp -R ./dist/ ./www/
-      - run: cp -R ./examples/ ./www/
-      
-      # Deploy to github pages
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4.2.5
-        with:
-          branch: gh-pages
-          folder: www
+        # Creates dist folder
+        - run: mkdir www
+        - run: cp -R ./dist/ ./www/
+        - run: cp -R ./examples/ ./www/
+        
+        # Deploy to github pages
+        - name: Deploy to GitHub Pages
+          uses: JamesIves/github-pages-deploy-action@v4.2.5
+          with:
+            branch: gh-pages
+            folder: www
