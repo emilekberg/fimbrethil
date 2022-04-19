@@ -15,7 +15,7 @@
   "scripts": {
     "test": "mocha --reporter spec",
     "coverage": "nyc --reporter lcov --reporter text-summary npm run test",
-    "build": "tsc -p ./tsconfig.esm.json",
+    "build": "tsc -p ./tsconfig.esm.json && rollup -c",
     "bundle": "rollup -c"
   },
   "repository": {
