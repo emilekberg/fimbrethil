@@ -1,0 +1,182 @@
+<html>
+
+<head></head>
+
+<body>
+  <canvas id="canvas"></canvas>
+</body>
+<script src="./dist/iife/index.js"></script>
+<script>
+  /***************************************************
+   * Define components 
+   * *************************************************/
+  class Transform extends fimbrethil.Component {
+    x = 0;
+    y = 0;
+  }
+  class Velocity extends fimbrethil.Component {
+    x = 0;
+    y = 0;
+  }
+  class Physics extends fimbrethil.Component {}
+  class Rectangle extends fimbrethil.Component {
+    color = 'red';
+    width = 10;
+    height = 10;
+  }
+  class Timer extends fimbrethil.Component {
+    value = 0;
+  }
+  class Spawner extends fimbrethil.Component {
+    value = 0;
+  }
+  fimbrethil.registerComponent(Velocity);
+  fimbrethil.registerComponent(Transform);
+  fimbrethil.registerComponent(Rectangle);
+  fimbrethil.registerComponent(Timer);
+  fimbrethil.registerComponent(Spawner);
+  fimbrethil.registerComponent(Physics);
+
+  /***************************************************
+   * Define systems
+   * *************************************************/
+
+  function render(world, { canvas }) {
+    const components = fimbrethil.Archetype.create(Rectangle, Transform);
+    const ctx = canvas.getContext('2d');
+    const { width, height } = canvas;
+    return (dt) => {
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, width, height)
+      world.query((rect, transform) => {
+        ctx.fillStyle = rect.color;
+        ctx.fillRect(transform.x, transform.y, rect.width, rect.height);
+
+      }, components);
+    }
+  }
+  function mover(world) {
+    const components = fimbrethil.Archetype.create(Transform, Velocity);
+    return (dt) => {
+      world.query((transform, velocity) => {
+        transform.x += velocity.x * dt;
+        transform.y += velocity.y * dt;
+      }, components);
+    }
+  }
+  function gravity(world) {
+    const components = fimbrethil.Archetype.create(Physics, Velocity);
+    return (dt) => {
+      world.query((physics, velocity) => {
+        velocity.y += 400 * dt;
+      }, components);
+    }
+  }
+  function physics(world, {canvas}) {
+    const {height, width} = canvas;
+    const components = fimbrethil.Archetype.create(Transform, Velocity, Rectangle, Physics);
+    return (dt) => {
+      world.query((transform, velocity, rect, _) => {
+        if (transform.y + rect.height > height) {
+          velocity.y *= -1;
+          transform.y = height - rect.height;
+          velocity.x *= 0.9;
+          velocity.y *= 0.70;
+        }
+        if (transform.x + rect.width > width || transform.x < 0) {
+          velocity.x *= -1;
+        }
+      }, components);
+    }
+  }
+  function lifetime(world) {
+    const components = fimbrethil.Archetype.create(Timer);
+    return (dt) => {
+      world.query((timer) => {
+        timer.value -= dt;
+        if (timer.value <= 0) {
+          world.removeEntity(timer.entityId);
+        }
+      }, components);
+    }
+  }
+  function spawner(world, options) {
+    const components = fimbrethil.Archetype.create(Transform, Spawner);
+    return (dt) => {
+      world.query((transform, spawner) => {
+        spawner.value += dt;
+        if (spawner.value > options.interval) {
+          createEntityRect(world, transform.x, transform.y);
+          spawner.value = 0;
+        }
+      }, components);
+    }
+  }
+
+  /***************************************************
+   * Helper function to create entity
+   * *************************************************/
+
+  function createEntityRect(world, x, y) {
+    return world.createEntity()
+      .with(Transform, {
+        x,y
+      })
+      .with(Velocity, {
+        x: (Math.random()*2-1) * 100,
+        y: (Math.random()*2-1) * 100,
+      })
+      .with(Rectangle)
+      .with(Timer, {
+        value: 10
+      })
+      .with(Physics)
+      .build();
+  }
+
+  const canvasElement = document.getElementById('canvas');
+
+  /***************************************************
+   * World setup
+   * *************************************************/
+  const world = new fimbrethil.World();
+  world
+    .add(spawner, {
+      interval: 0.5
+    })
+    .add(lifetime)
+    .add(mover)
+    .add(gravity)
+    .add(physics, {
+      canvas: canvasElement
+    })
+    .addRenderer(render, {
+      canvas: canvasElement
+    });
+
+  world.createEntity()
+    .with(Transform, {
+      x: canvasElement.width * 0.5,
+      y: canvasElement.height * 0.25,
+    })
+    .with(Spawner)
+    .build();
+
+  /***************************************************
+   * Simple update loop
+   * *************************************************/
+  let now = performance.now();
+  let then = performance.now();
+  (function ticker() {
+    now = performance.now();
+    let delta = (now - then) / 1000;
+    then = now;
+    world.tick(delta);
+    world.render(delta);
+    requestAnimationFrame(ticker);
+  })();
+
+
+</script>
+
+</html>

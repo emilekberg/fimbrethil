@@ -1,0 +1,112 @@
+<html>
+
+<head>
+  <style type="text/css">
+    body {
+      padding: 0px;
+      margin: 0px;
+    }
+  </style>
+</head>
+
+<body>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.js"></script>
+<script src="./dist/iife/index.js"></script>
+<script src="./three/components.js"></script>
+<script src="./three/systems.js"></script>
+<script>
+  const world = new fimbrethil.World();
+  world.onComponentAdded(Mesh, (comp) => {
+    const parent = world.getComponent(comp.entityId, fimbrethil.Parent);
+    if(parent) {
+      const mesh = world.getComponent(parent.entityId, Mesh);
+      if(mesh) {
+        mesh.mesh.add(comp.mesh);
+        return;
+      }
+    }
+    world.query((scene) => {
+      scene.value.add(comp.mesh);
+    }, fimbrethil.Archetype.create(Scene));
+  });
+  world.onComponentRemoved(Mesh, (comp) => {
+    comp.mesh.parent.remove(comp.mesh)
+  });
+
+  world
+    .add(mover)
+    .add(transformUpdateSystem)
+    .addRenderer(render);
+
+  world.createEntity()
+    .with(Scene)
+    .build();
+;
+  world.createEntity()
+    .with(Transform, {
+      position: new THREE.Vector3(0,0,5),
+    })
+    .with(Camera)
+    .build();
+
+    const geometry = new THREE.BoxGeometry();
+    const material = new THREE.MeshPhongMaterial({
+      // light
+      specular: 0xD76531,
+      // intermediate
+      color: 0xef8834,
+      // dark
+      emissive: 0x8c2317,
+      shininess: 50,
+      wireframe: false,
+    });
+
+  world.createEntity()
+    .with(Transform)
+    .with(Velocity, {
+      rotation: new THREE.Vector3(1,1,0),
+    })
+    .with(Mesh, {
+      mesh: new THREE.Mesh(geometry, material)
+    })
+    .withChild('cube', child => child
+      .with(Transform, {
+        position: new THREE.Vector3(0.5,0.5,0)
+      })
+      .with(Velocity, {
+        rotation: new THREE.Vector3(1,1,1)
+      })
+      .with(Mesh, {
+        mesh: new THREE.Mesh(geometry, material)
+      }))
+    .build();
+    
+  world.createEntity()
+    .with(Transform, {
+      position: new THREE.Vector3(2,2,1),
+    })
+    .with(Mesh, {
+      mesh: new THREE.DirectionalLight(0xFFFFFF, 2)
+    })
+    .build();
+
+
+  /***************************************************
+   * Simple update loop
+   * *************************************************/
+  let now = performance.now();
+  let then = performance.now();
+  (function ticker() {
+    now = performance.now();
+    let delta = (now - then) / 1000;
+    then = now;
+    world.tick(delta);
+    world.render(delta);
+    requestAnimationFrame(ticker);
+  })();
+
+
+</script>
+
+</html>
