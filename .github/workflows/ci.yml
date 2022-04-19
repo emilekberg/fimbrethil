@@ -33,7 +33,7 @@ jobs:
 
     # Creates dist folder
     - run: mkdir www
-    - run: cp -R ./dist/ ./www/
+    - run: cp -R ./dist/. ./www/
     - run: cp -R ./examples/ ./www/
     
     # Deploy to github pages
